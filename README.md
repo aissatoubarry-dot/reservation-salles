@@ -87,3 +87,30 @@ Parce que `active` représente un état vrai ou faux. Le cast permet donc d'util
 ### 4. Pourquoi convertir les dates en objets ?
 
 Pour pouvoir facilement comparer et manipuler les dates en PHP.
+
+
+
+
+## Étape 4 — Données initiales
+
+### 1. Quelle différence existe entre migration et seeder ?
+
+La migration sert à créer et modifier la structure de la base de données, par exemple les tables, les colonnes et les contraintes.
+
+Le seeder sert à insérer des données initiales dans les tables.
+
+### 2. Pourquoi les données initiales doivent-elles être reproductibles ?
+
+Parce qu'on peut avoir besoin de relancer le seeder plusieurs fois, par exemple lors de l'installation ou des tests du projet.
+
+Le résultat doit rester cohérent et ne pas créer inutilement plusieurs fois les mêmes données.
+
+### 3. Comment empêcher les doublons ?
+
+On peut utiliser `firstOrCreate()`.
+
+Cette méthode recherche d'abord si la salle existe déjà. Si elle existe, elle ne la recrée pas. Sinon, elle l'insère dans la base de données.
+
+
+
+
