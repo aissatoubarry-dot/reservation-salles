@@ -37,3 +37,31 @@ Composer est le gestionnaire de dépendances de PHP. Il permet d'installer les b
 
 Le dossier `vendor/` contient les dépendances installées par Composer. Il peut être recréé avec `composer install` à partir de `composer.json` et `composer.lock`. Il n'est donc pas nécessaire de le versionner.
 
+
+
+## Étape 2 — Configurer Eloquent
+
+### 1. Quel rôle joue Capsule\Manager ?
+
+`Capsule\Manager` permet de configurer et d'utiliser Eloquent en dehors de Laravel.
+Il permet notamment de configurer la connexion à la base de données et de démarrer Eloquent.
+
+### 2. Pourquoi Eloquent peut-il fonctionner sans Laravel ?
+
+Eloquent est fourni séparément par le composant `illuminate/database`.
+Il peut donc être utilisé sans installer le framework Laravel.
+`Capsule\Manager` permet notamment cette utilisation autonome.
+
+### 3. Où doit se trouver le démarrage de l'ORM ?
+
+Le démarrage et la configuration de l'ORM doivent être centralisés dans la configuration technique de l'application, ici `config/database.php`.
+Les classes métier ne doivent pas configurer elles-mêmes la connexion.
+
+### 4. Quelle différence existe entre ORM et SQL écrit à la main ?
+
+Avec SQL écrit à la main, le développeur écrit directement les requêtes SQL.
+
+Avec un ORM comme Eloquent, on manipule des objets et des modèles PHP qui représentent les données de la base.
+L'ORM génère ensuite les requêtes SQL nécessaires.
+
+
