@@ -65,3 +65,25 @@ Avec un ORM comme Eloquent, on manipule des objets et des modèles PHP qui repr�
 L'ORM génère ensuite les requêtes SQL nécessaires.
 
 
+
+
+## Étape 3 — Créer les modèles
+
+### 1. Quel type de relation Eloquent avez-vous utilisé ?
+
+Nous avons utilisé :
+
+- `HasMany` : une salle possède plusieurs réservations.
+- `BelongsTo` : une réservation appartient à une salle.
+
+### 2. Pourquoi déclarer `$fillable` ou `$guarded` ?
+
+Pour contrôler les champs qui peuvent être remplis automatiquement par Eloquent et éviter les modifications de champs non autorisés.
+
+### 3. Pourquoi convertir `active` en booléen ?
+
+Parce que `active` représente un état vrai ou faux. Le cast permet donc d'utiliser `true` et `false` en PHP.
+
+### 4. Pourquoi convertir les dates en objets ?
+
+Pour pouvoir facilement comparer et manipuler les dates en PHP.
