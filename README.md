@@ -114,3 +114,30 @@ Cette méthode recherche d'abord si la salle existe déjà. Si elle existe, elle
 
 
 
+
+## Étape 5 — validation
+
+### 1.​ Pourquoi séparer la validation syntaxique des règles métier ?
+
+Pour séparer les responsabilités : la validation syntaxique vérifie le format des données, tandis que les règles métier vérifient si l'opération respecte les règles de l'application.
+
+Les séparer permet donc de respecter la séparation des responsabilités et de rendre le code plus clair et plus facile à maintenir.
+
+### 2.​ Pourquoi créer une interface de validation ?
+
+L'interface `ValidatorInterface` définit un contrat commun pour tous les validateurs de l'application.
+
+Ainsi, chaque validateur doit respecter la même manière de fonctionner. Cela rend le code plus cohérent, plus facile à maintenir et permet d'ajouter de nouveaux validateurs sans modifier l'organisation existante.
+
+### 3. Pourquoi le validateur ne doit-il pas enregistrer les données ?
+
+Pour séparer les responsabilités : le validateur doit uniquement vérifier si les données sont correctes. L'enregistrement des données doit être réalisé par une autre couche de l'application.
+
+Cela rend le code plus clair, plus facile à tester et à maintenir.
+
+### 4. Comment retourner plusieurs erreurs en une seule fois ?
+
+On stocke toutes les erreurs dans un tableau `$errors` au fur et à mesure de la validation. Ainsi, la validation ne s'arrête pas à la première erreur et peut retourner toutes les erreurs détectées en une seule fois.
+
+
+
