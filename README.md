@@ -210,3 +210,32 @@ Une `SalleIndisponibleException` est levée lorsqu'une réservation confirmée e
 ### 4. Comment tester le service sans MySQL ?
 
 On peut utiliser des mocks ou des stubs des interfaces `SalleRepositoryInterface` et `ReservationRepositoryInterface`. Le service peut ainsi être testé sans utiliser une vraie base de données.
+
+
+
+
+## Étape 10 — Router
+
+### 1. Pourquoi FastRoute ne construit-il pas lui-même le contrôleur ?
+
+FastRoute est responsable du routage : il détermine quelle route correspond à la requête et retourne le handler associé.
+
+La construction du contrôleur est confiée au conteneur de dépendances afin que ses dépendances soient correctement injectées.
+
+### 2. Quelle différence existe entre 404 et 405 ?
+
+Une erreur 404 signifie qu'aucune route ne correspond à l'URL demandée.
+
+Une erreur 405 signifie que la route existe, mais que la méthode HTTP utilisée n'est pas autorisée.
+
+### 3. Pourquoi contraindre {id} avec \d+ ?
+
+La contrainte `\d+` permet de limiter le paramètre `id` aux chiffres.
+
+Par exemple, `/salles/12` correspond à la route, tandis que `/salles/abc` ne correspond pas.
+
+### 4. Quel composant doit interpréter le handler retourné ?
+
+C'est le routeur, dans `public/index.php`, qui interprète le handler retourné par FastRoute.
+
+Il utilise ensuite le conteneur pour obtenir le contrôleur et appelle l'action correspondante.
