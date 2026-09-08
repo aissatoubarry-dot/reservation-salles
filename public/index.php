@@ -40,3 +40,5 @@ switch ($routeInfo[0]) {
         $controller->{$handler[1]}(...array_values($vars));
         break;
 }
+
+
