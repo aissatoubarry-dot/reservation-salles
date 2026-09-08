@@ -173,6 +173,7 @@ Elle doit être vérifiée dans la couche service qui contient les règles méti
 
 
 ## Etape 7 - Accès aux données
+
 ### 1. Eloquent constitue-t-il déjà un accès aux données ?
 
 Oui. Eloquent permet déjà d'effectuer les opérations d'accès aux données avec les modèles.
@@ -188,3 +189,24 @@ Non. Pour une petite application, Eloquent peut parfois être suffisant. Elle de
 ### 4. Quel avantage apporte-t-elle ?
 
 Elle améliore la séparation des responsabilités, facilite les tests et permet de modifier la manière d'accéder aux données sans modifier les contrôleurs ou les services.
+
+
+
+
+## Étape 8 — règles métier
+
+### 1. Pourquoi ces règles ne sont-elles pas dans le contrôleur ?
+
+Parce que le contrôleur doit gérer la requête HTTP et déléguer le traitement. Les règles métier sont regroupées dans le service afin de respecter la séparation des responsabilités.
+
+### 2. Pourquoi le service dépend-il d’une interface de Repository ?
+
+Le service dépend d’un contrat et non d’une implémentation concrète. Cela permet de remplacer facilement le Repository et de tester le service avec des doublures de test.
+
+### 3. Quelle exception doit être levée en cas de conflit ?
+
+Une `SalleIndisponibleException` est levée lorsqu'une réservation confirmée existe déjà sur la période demandée.
+
+### 4. Comment tester le service sans MySQL ?
+
+On peut utiliser des mocks ou des stubs des interfaces `SalleRepositoryInterface` et `ReservationRepositoryInterface`. Le service peut ainsi être testé sans utiliser une vraie base de données.
