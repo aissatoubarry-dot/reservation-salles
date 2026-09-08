@@ -141,3 +141,30 @@ On stocke toutes les erreurs dans un tableau `$errors` au fur et à mesure de la
 
 
 
+
+
+## Étape 6 — DTO
+
+### 1. Quelle différence existe entre DTO et modèle Eloquent ?
+
+Le DTO sert à transporter des données entre les différentes couches de l'application. Il contient des données correctement typées et ne représente pas directement une table de la base de données.
+
+Le modèle Eloquent représente une donnée persistée en base de données et permet notamment d'utiliser les relations et les opérations de sauvegarde avec Eloquent.
+
+### 2. Pourquoi le DTO ne doit-il pas appeler save() ?
+
+Le DTO doit uniquement transporter les données. Il ne doit pas gérer la persistance en base de données.
+
+L'appel à `save()` appartient à la couche responsable de l'enregistrement des données. Cela permet de respecter la séparation des responsabilités.
+
+### 3. À quel moment transforme-t-on les chaînes en dates ?
+
+Les dates reçues depuis `$_POST` sont des chaînes de caractères. Elles sont transformées en objets `DateTimeImmutable` avant la création du DTO.
+
+Le DTO reçoit donc directement des dates correctement typées.
+
+### 4. Le DTO doit-il contenir la règle de chevauchement ?
+
+Non. La règle de chevauchement est une règle métier.
+
+Elle doit être vérifiée dans la couche service qui contient les règles métier de réservation. Le DTO doit uniquement transporter les données et effectuer la validation prévue pour ses données.
