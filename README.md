@@ -168,3 +168,23 @@ Le DTO reçoit donc directement des dates correctement typées.
 Non. La règle de chevauchement est une règle métier.
 
 Elle doit être vérifiée dans la couche service qui contient les règles métier de réservation. Le DTO doit uniquement transporter les données et effectuer la validation prévue pour ses données.
+
+
+
+
+## Etape 7 - Accès aux données
+### 1. Eloquent constitue-t-il déjà un accès aux données ?
+
+Oui. Eloquent permet déjà d'effectuer les opérations d'accès aux données avec les modèles.
+
+### 2. Pourquoi ajouter un Repository au-dessus d'Eloquent ?
+
+Le Repository permet d'isoler Eloquent du reste de l'application et de centraliser les opérations d'accès aux données.
+
+### 3. Cette abstraction est-elle toujours nécessaire ?
+
+Non. Pour une petite application, Eloquent peut parfois être suffisant. Elle devient surtout intéressante lorsque l'application devient plus complexe ou doit évoluer.
+
+### 4. Quel avantage apporte-t-elle ?
+
+Elle améliore la séparation des responsabilités, facilite les tests et permet de modifier la manière d'accéder aux données sans modifier les contrôleurs ou les services.
