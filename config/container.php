@@ -28,8 +28,8 @@ return [
             dirname(__DIR__)
         );
 
-        $dotenv->load();
-
+        $dotenv->safeLoad();
+        
         $capsule = new Manager();
 
         $capsule->addConnection([
