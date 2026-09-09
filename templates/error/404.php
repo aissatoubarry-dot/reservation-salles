@@ -1,9 +1,23 @@
 <?php
+
 $title = 'Page introuvable';
+
 ?>
 
-<h2>404 - Page introuvable</h2>
+<div class="error-page">
 
-<p>La page demandée n'existe pas.</p>
+    <div class="error-code">
+        404
+    </div>
 
-<a href="/">Retour à l'accueil</a>
+    <h2>Page introuvable</h2>
+
+    <p>
+        Désolé, la page que vous recherchez n'existe pas.
+    </p>
+
+    <a href="/salles" class="btn btn-primary">
+        ← Retour aux salles
+    </a>
+
+</div>

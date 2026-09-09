@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\DTO\CreerReservationDTOBuilder;
@@ -27,7 +29,14 @@ class ReservationController
     {
         $reservations = $this->reservationRepository->lister();
 
-        require __DIR__ . '/../../templates/reservation/index.php';
+        ob_start();
+
+        require dirname(__DIR__, 2) . '/templates/reservation/index.php';
+
+        $content = ob_get_clean();
+        $title = 'Liste des réservations';
+
+        require dirname(__DIR__, 2) . '/templates/layout/base.php';
     }
 
     public function show(int $id): void
@@ -36,11 +45,18 @@ class ReservationController
 
         if ($reservation === null) {
             http_response_code(404);
-            require __DIR__ . '/../../templates/error/404.php';
+            require dirname(__DIR__, 2) . '/templates/error/404.php';
             return;
         }
 
-        require __DIR__ . '/../../templates/reservation/show.php';
+        ob_start();
+
+        require dirname(__DIR__, 2) . '/templates/reservation/show.php';
+
+        $content = ob_get_clean();
+        $title = 'Détail de la réservation';
+
+        require dirname(__DIR__, 2) . '/templates/layout/base.php';
     }
 
     public function create(): void
@@ -48,19 +64,48 @@ class ReservationController
         $salles = $this->salleRepository->lister();
         $errors = [];
         $data = [];
+        $action = '/reservations';
 
-        require __DIR__ . '/../../templates/reservation/form.php';
+        ob_start();
+
+        require dirname(__DIR__, 2) . '/templates/reservation/form.php';
+
+        $content = ob_get_clean();
+        $title = 'Nouvelle réservation';
+
+        require dirname(__DIR__, 2) . '/templates/layout/base.php';
     }
 
     public function store(): void
     {
         $data = $_POST;
 
+        if (isset($data['salle_id'])) {
+            $data['salle_id'] = (int) $data['salle_id'];
+        }   
+
+        if (!empty($data['date_debut'])) {
+            $data['date_debut'] = str_replace('T', ' ', $data['date_debut']);
+
+            if (strlen($data['date_debut']) === 16) {
+                $data['date_debut'] .= ':00';
+            }
+        }
+
+        if (!empty($data['date_fin'])) {
+            $data['date_fin'] = str_replace('T', ' ', $data['date_fin']);
+
+            if (strlen($data['date_fin']) === 16) {
+                $data['date_fin'] .= ':00';
+            }
+        }
+
         $result = $this->validator->validate($data);
 
         if (!$result->isValid()) {
             $errors = $result->errors();
             $salles = $this->salleRepository->lister();
+            $action = '/reservations';
 
             require __DIR__ . '/../../templates/reservation/form.php';
             return;
@@ -80,6 +125,7 @@ class ReservationController
         } catch (SalleIndisponibleException $e) {
             $errors['salle_id'][] = $e->getMessage();
             $salles = $this->salleRepository->lister();
+            $action = '/reservations';
 
             require __DIR__ . '/../../templates/reservation/form.php';
             return;

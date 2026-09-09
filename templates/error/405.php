@@ -1,9 +1,23 @@
 <?php
+
 $title = 'Méthode non autorisée';
+
 ?>
 
-<h2>405 - Méthode non autorisée</h2>
+<div class="error-page">
 
-<p>La méthode HTTP utilisée n'est pas autorisée pour cette URL.</p>
+    <div class="error-code">
+        405
+    </div>
 
-<a href="/">Retour à l'accueil</a>
+    <h2>Méthode non autorisée</h2>
+
+    <p>
+        Cette action HTTP n'est pas autorisée pour cette adresse.
+    </p>
+
+    <a href="/salles" class="btn btn-primary">
+        ← Retour aux salles
+    </a>
+
+</div>
