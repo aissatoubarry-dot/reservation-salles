@@ -1,33 +1,111 @@
 <?php
+
+/** @var \App\Model\Salle $salle */
+
 $title = 'Détail de la salle';
+
 ?>
 
-<h2>Détail de la salle</h2>
+<div class="page-title">
 
-<p>
-    <strong>Nom :</strong>
-    <?= htmlspecialchars($salle->nom) ?>
-</p>
+    <div>
+        <h2><?= htmlspecialchars($salle->nom) ?></h2>
+        <p>Informations concernant cette salle.</p>
+    </div>
 
-<p>
-    <strong>Bâtiment :</strong>
-    <?= htmlspecialchars($salle->batiment) ?>
-</p>
+    <a href="/salles" class="btn btn-secondary">
+        ← Retour
+    </a>
 
-<p>
-    <strong>Capacité :</strong>
-    <?= htmlspecialchars((string) $salle->capacite) ?> places
-</p>
+</div>
 
-<p>
-    <strong>Type :</strong>
-    <?= htmlspecialchars($salle->type) ?>
-</p>
 
-<p>
-    <strong>État :</strong>
-    <?= $salle->active ? 'Active' : 'Inactive' ?>
-</p>
+<div class="card reservation-detail">
 
-<a href="/salles">Retour à la liste</a>
-<a href="/salles/<?= $salle->id ?>/edit">Modifier</a>
+    <div class="detail-list">
+
+        <div class="detail-label">
+            Nom
+        </div>
+
+        <div>
+            <?= htmlspecialchars($salle->nom) ?>
+        </div>
+
+
+        <div class="detail-label">
+            Bâtiment
+        </div>
+
+        <div>
+            <?= htmlspecialchars($salle->batiment) ?>
+        </div>
+
+
+        <div class="detail-label">
+            Capacité
+        </div>
+
+        <div>
+            <?= htmlspecialchars((string) $salle->capacite) ?>
+            places
+        </div>
+
+
+        <div class="detail-label">
+            Type
+        </div>
+
+        <div>
+            <?= htmlspecialchars(ucfirst($salle->type)) ?>
+        </div>
+
+
+        <div class="detail-label">
+            Statut
+        </div>
+
+        <div>
+
+            <?php if ($salle->active): ?>
+
+                <span class="badge badge-success">
+                    Active
+                </span>
+
+            <?php else: ?>
+
+                <span class="badge badge-danger">
+                    Inactive
+                </span>
+
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
+
+    <div class="detail-actions">
+
+        <a
+            href="/salles/<?= $salle->id ?>/edit"
+            class="btn btn-secondary"
+        >
+            Modifier
+        </a>
+
+        <?php if ($salle->active): ?>
+
+            <a
+                href="/reservations/create"
+                class="btn btn-success"
+            >
+                Réserver cette salle
+            </a>
+
+        <?php endif; ?>
+
+    </div>
+
+</div>

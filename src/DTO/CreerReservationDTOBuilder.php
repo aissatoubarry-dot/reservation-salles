@@ -2,7 +2,6 @@
 
 namespace App\DTO;
 
-use DateTimeImmutable;
 
 class CreerReservationDTOBuilder
 {
@@ -10,8 +9,8 @@ class CreerReservationDTOBuilder
     private ?string $responsable = null;
     private ?string $email = null;
     private ?string $motif = null;
-    private ?DateTimeImmutable $dateDebut = null;
-    private ?DateTimeImmutable $dateFin = null;
+    private ?\DateTimeImmutable $dateDebut = null;
+    private ?\DateTimeImmutable $dateFin = null;
 
     public function setSalleId(int $salleId): self
     {
@@ -41,14 +40,14 @@ class CreerReservationDTOBuilder
         return $this;
     }
 
-    public function setDateDebut(DateTimeImmutable $dateDebut): self
+    public function setDateDebut(\DateTimeImmutable $dateDebut): self
     {
         $this->dateDebut = $dateDebut;
 
         return $this;
     }
 
-    public function setDateFin(DateTimeImmutable $dateFin): self
+    public function setDateFin(\DateTimeImmutable $dateFin): self
     {
         $this->dateFin = $dateFin;
 

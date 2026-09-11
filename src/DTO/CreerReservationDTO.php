@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use App\Validation\ReservationValidator;
-use DateTimeImmutable;
 
 readonly class CreerReservationDTO
 {
@@ -12,8 +11,8 @@ readonly class CreerReservationDTO
         private string $responsable,
         private string $email,
         private string $motif,
-        private DateTimeImmutable $dateDebut,
-        private DateTimeImmutable $dateFin
+        private \DateTimeImmutable $dateDebut,
+        private \DateTimeImmutable $dateFin
     ) {
     }
 
@@ -56,12 +55,12 @@ readonly class CreerReservationDTO
         return $this->motif;
     }
 
-    public function getDateDebut(): DateTimeImmutable
+    public function getDateDebut(): \DateTimeImmutable
     {
         return $this->dateDebut;
     }
 
-    public function getDateFin(): DateTimeImmutable
+    public function getDateFin(): \DateTimeImmutable
     {
         return $this->dateFin;
     }

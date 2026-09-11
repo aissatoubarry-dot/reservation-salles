@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Model\Reservation;
 use App\Repository\ReservationRepositoryInterface;
+use App\Exception\ReservationIntrouvableException;
 
 class AnnulerReservationService
 {

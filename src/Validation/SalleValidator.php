@@ -5,7 +5,7 @@ use App\Validation\ValidationResult;
 
 use Respect\Validation\Validator as v;
 
-class SalleValidator implements ValidatorInterface
+class  SalleValidator implements SalleValidatorInterface
 {
    
     public function validate(array $data): ValidationResult

@@ -13,8 +13,6 @@ Application web développée en PHP orienté objet permettant de gérer les sall
 - PHP-DI
 - PHP dotenv
 
-
-
 ## Étape 1 — Composer
 
 ### Questions
@@ -36,8 +34,6 @@ Composer est le gestionnaire de dépendances de PHP. Il permet d'installer les b
 #### 4. Pourquoi ne versionne-t-on pas vendor/ ?
 
 Le dossier `vendor/` contient les dépendances installées par Composer. Il peut être recréé avec `composer install` à partir de `composer.json` et `composer.lock`. Il n'est donc pas nécessaire de le versionner.
-
-
 
 ## Étape 2 — Configurer Eloquent
 
@@ -64,9 +60,6 @@ Avec SQL écrit à la main, le développeur écrit directement les requêtes SQL
 Avec un ORM comme Eloquent, on manipule des objets et des modèles PHP qui représentent les données de la base.
 L'ORM génère ensuite les requêtes SQL nécessaires.
 
-
-
-
 ## Étape 3 — Créer les modèles
 
 ### 1. Quel type de relation Eloquent avez-vous utilisé ?
@@ -88,9 +81,6 @@ Parce que `active` représente un état vrai ou faux. Le cast permet donc d'util
 
 Pour pouvoir facilement comparer et manipuler les dates en PHP.
 
-
-
-
 ## Étape 4 — Données initiales
 
 ### 1. Quelle différence existe entre migration et seeder ?
@@ -110,10 +100,6 @@ Le résultat doit rester cohérent et ne pas créer inutilement plusieurs fois l
 On peut utiliser `firstOrCreate()`.
 
 Cette méthode recherche d'abord si la salle existe déjà. Si elle existe, elle ne la recrée pas. Sinon, elle l'insère dans la base de données.
-
-
-
-
 
 ## Étape 5 — validation
 
@@ -138,10 +124,6 @@ Cela rend le code plus clair, plus facile à tester et à maintenir.
 ### 4. Comment retourner plusieurs erreurs en une seule fois ?
 
 On stocke toutes les erreurs dans un tableau `$errors` au fur et à mesure de la validation. Ainsi, la validation ne s'arrête pas à la première erreur et peut retourner toutes les erreurs détectées en une seule fois.
-
-
-
-
 
 ## Étape 6 — DTO
 
@@ -169,9 +151,6 @@ Non. La règle de chevauchement est une règle métier.
 
 Elle doit être vérifiée dans la couche service qui contient les règles métier de réservation. Le DTO doit uniquement transporter les données et effectuer la validation prévue pour ses données.
 
-
-
-
 ## Etape 7 - Accès aux données
 
 ### 1. Eloquent constitue-t-il déjà un accès aux données ?
@@ -190,9 +169,6 @@ Non. Pour une petite application, Eloquent peut parfois être suffisant. Elle de
 
 Elle améliore la séparation des responsabilités, facilite les tests et permet de modifier la manière d'accéder aux données sans modifier les contrôleurs ou les services.
 
-
-
-
 ## Étape 8 — règles métier
 
 ### 1. Pourquoi ces règles ne sont-elles pas dans le contrôleur ?
@@ -210,9 +186,6 @@ Une `SalleIndisponibleException` est levée lorsqu'une réservation confirmée e
 ### 4. Comment tester le service sans MySQL ?
 
 On peut utiliser des mocks ou des stubs des interfaces `SalleRepositoryInterface` et `ReservationRepositoryInterface`. Le service peut ainsi être testé sans utiliser une vraie base de données.
-
-
-
 
 ## Étape 10 — Router
 
@@ -239,3 +212,88 @@ Par exemple, `/salles/12` correspond à la route, tandis que `/salles/abc` ne co
 C'est le routeur, dans `public/index.php`, qui interprète le handler retourné par FastRoute.
 
 Il utilise ensuite le conteneur pour obtenir le contrôleur et appelle l'action correspondante.
+
+## Étape 11 — Container PHP-DI
+
+### 1. Quelle différence entre injection de dépendance et utilisation directe du conteneur ?
+
+L'injection de dépendance consiste à fournir à une classe les objets dont elle a besoin depuis l'extérieur, généralement dans son constructeur.
+
+L'utilisation directe du conteneur consiste à demander soi-même au conteneur de créer ou rechercher une dépendance.
+
+L'injection de dépendance permet donc de garder les classes indépendantes du conteneur.
+
+### 2. Qu'est-ce que l'autowiring et dans quels cas fonctionne-t-il ?
+
+L'autowiring permet à PHP-DI de construire automatiquement une classe en analysant son constructeur et les types de ses paramètres.
+
+Il fonctionne principalement lorsque les dépendances sont des classes concrètes que PHP-DI sait construire automatiquement.
+
+### 3. Pourquoi les interfaces nécessitent-elles une définition explicite ?
+
+Une interface ne peut pas être instanciée directement.
+
+Le conteneur doit donc savoir quelle classe concrète utiliser lorsqu'une classe demande une interface.
+
+Par exemple :
+
+SalleRepositoryInterface → SalleRepository
+
+### 4. Pourquoi limiter `$container->get()` au point d'entrée ?
+
+Cela permet d'éviter que les classes de l'application dépendent directement du conteneur.
+
+Les dépendances sont injectées dans les classes plutôt que recherchées depuis le conteneur.
+
+Cela rend le code plus testable, plus clair et moins couplé à PHP-DI.
+
+### 5. Que se passe-t-il si toutes les classes utilisent le conteneur pour chercher leurs dépendances ?
+
+On tombe dans le pattern Service Locator.
+
+Les classes deviennent dépendantes du conteneur et leurs dépendances sont cachées dans leur code.
+
+Cela augmente le couplage et rend le code plus difficile à tester et à maintenir.
+
+
+
+## Étape 13 — Finalisation
+
+### Installation
+
+### Prérequis
+
+- Docker
+- Docker Compose
+- Git
+- PHP 8.3
+- Composer
+
+### Lancer le projet
+
+Cloner le projet :
+
+```bash
+git clone https://github.com/aissatoubarry-dot/reservation-salles.git
+cd reservation-salles
+```
+
+Installer les dépendances :
+composer install
+
+Créer le fichier .env :
+cp .env.example .env
+
+Démarrer les conteneurs :
+docker compose up -d --build
+
+Créer les tables :
+docker compose exec php php database/migrate.php
+
+Insérer les données initiales :
+docker compose exec php php database/seed.php
+
+L'application est accessible sur :
+http://localhost:8080
+
+

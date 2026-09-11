@@ -6,6 +6,7 @@ namespace Config;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Illuminate\Database\Capsule\Manager;
 
 final class ContainerFactory
 {
@@ -17,7 +18,11 @@ final class ContainerFactory
             dirname(__DIR__) . '/config/container.php'
         );
 
-        return $builder->build();
+        $container = $builder->build();
+
+        $container->get(Manager::class);
+
+        return $container;
     }
 }
 

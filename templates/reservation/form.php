@@ -1,95 +1,245 @@
 <?php
+
+$salles = $salles ?? [];
+$data = $data ?? [];
+$errors = $errors ?? [];
+$action = $action ?? '/reservations';
+
 $title = 'Nouvelle réservation';
+
+$salleId = $data['salle_id'] ?? '';
+$responsable = $data['responsable'] ?? '';
+$email = $data['email'] ?? '';
+$motif = $data['motif'] ?? '';
+$dateDebut = $data['date_debut'] ?? '';
+$dateFin = $data['date_fin'] ?? '';
+
+/*
+ * Pour datetime-local, le navigateur attend :
+ * 2026-09-12T13:13
+ *
+ * Si une validation échoue après conversion en :
+ * 2026-09-12 13:13:00
+ *
+ * on reconvertit pour l'affichage dans le formulaire.
+ */
+if ($dateDebut !== '') {
+    $dateDebut = str_replace(' ', 'T', $dateDebut);
+    $dateDebut = substr($dateDebut, 0, 16);
+}
+
+if ($dateFin !== '') {
+    $dateFin = str_replace(' ', 'T', $dateFin);
+    $dateFin = substr($dateFin, 0, 16);
+}
+
 ?>
 
-<h2><?= htmlspecialchars($title) ?></h2>
-
-<?php if (!empty($errors)): ?>
+<div class="page-title">
     <div>
-        <p>Veuillez corriger les erreurs :</p>
+        <h2>Nouvelle réservation</h2>
+        <p>
+            Réservez une salle pour votre activité.
+        </p>
+    </div>
 
-        <ul>
-            <?php foreach ($errors as $fieldErrors): ?>
-                <?php foreach ($fieldErrors as $error): ?>
-                    <li><?= htmlspecialchars($error) ?></li>
+    <a href="/reservations" class="btn btn-secondary">
+        ← Retour
+    </a>
+</div>
+
+
+<div class="form-card">
+
+    <?php if (!empty($errors)): ?>
+
+        <div class="alert-error">
+
+            <strong>Veuillez corriger les erreurs :</strong>
+
+            <ul>
+                <?php foreach ($errors as $fieldErrors): ?>
+
+                    <?php foreach ((array) $fieldErrors as $error): ?>
+
+                        <li>
+                            <?= htmlspecialchars($error) ?>
+                        </li>
+
+                    <?php endforeach; ?>
+
                 <?php endforeach; ?>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php endif; ?>
+            </ul>
 
-<form method="POST" action="<?= htmlspecialchars($action) ?>">
+        </div>
 
-    <div>
-        <label for="salle_id">Salle</label>
+    <?php endif; ?>
 
-        <select id="salle_id" name="salle_id">
-            <?php foreach ($salles as $salle): ?>
-                <option
-                    value="<?= htmlspecialchars((string) $salle->id) ?>"
-                    <?= (($data['salle_id'] ?? '') == $salle->id) ? 'selected' : '' ?>
-                >
-                    <?= htmlspecialchars($salle->nom) ?>
+
+    <form method="POST" action="<?= htmlspecialchars($action) ?>">
+
+        <!-- Salle -->
+
+        <div class="form-group">
+
+            <label for="salle_id">
+                Salle
+            </label>
+
+            <select
+                id="salle_id"
+                name="salle_id"
+                required
+            >
+
+                <option value="">
+                    -- Sélectionner une salle --
                 </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
 
-    <div>
-        <label for="responsable">Responsable</label>
+                <?php foreach ($salles as $salle): ?>
 
-        <input
-            type="text"
-            id="responsable"
-            name="responsable"
-            value="<?= htmlspecialchars($data['responsable'] ?? '') ?>"
-        >
-    </div>
+                    <?php if ($salle->active): ?>
 
-    <div>
-        <label for="email">Email</label>
+                        <option
+                            value="<?= $salle->id ?>"
+                            <?= (string) $salleId === (string) $salle->id ? 'selected' : '' ?>
+                        >
+                            <?= htmlspecialchars($salle->nom) ?>
+                            -
+                            <?= htmlspecialchars($salle->batiment) ?>
+                            -
+                            <?= $salle->capacite ?> places
+                        </option>
 
-        <input
-            type="email"
-            id="email"
-            name="email"
-            value="<?= htmlspecialchars($data['email'] ?? '') ?>"
-        >
-    </div>
+                    <?php endif; ?>
 
-    <div>
-        <label for="motif">Motif</label>
+                <?php endforeach; ?>
 
-        <textarea
-            id="motif"
-            name="motif"
-        ><?= htmlspecialchars($data['motif'] ?? '') ?></textarea>
-    </div>
+            </select>
 
-    <div>
-        <label for="date_debut">Date de début</label>
+        </div>
 
-        <input
-            type="datetime-local"
-            id="date_debut"
-            name="date_debut"
-            value="<?= htmlspecialchars($data['date_debut'] ?? '') ?>"
-        >
-    </div>
 
-    <div>
-        <label for="date_fin">Date de fin</label>
+        <!-- Responsable -->
 
-        <input
-            type="datetime-local"
-            id="date_fin"
-            name="date_fin"
-            value="<?= htmlspecialchars($data['date_fin'] ?? '') ?>"
-        >
-    </div>
+        <div class="form-group">
 
-    <button type="submit">Réserver</button>
+            <label for="responsable">
+                Responsable
+            </label>
 
-</form>
+            <input
+                type="text"
+                id="responsable"
+                name="responsable"
+                value="<?= htmlspecialchars($responsable) ?>"
+                placeholder="Ex : Aïssatou Barry"
+                required
+            >
 
-<a href="/reservations">Retour à la liste</a>
+        </div>
+
+
+        <!-- Email -->
+
+        <div class="form-group">
+
+            <label for="email">
+                Adresse email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                value="<?= htmlspecialchars($email) ?>"
+                placeholder="Ex : aissatou@example.com"
+                required
+            >
+
+        </div>
+
+
+        <!-- Motif -->
+
+        <div class="form-group">
+
+            <label for="motif">
+                Motif de la réservation
+            </label>
+
+            <textarea
+                id="motif"
+                name="motif"
+                placeholder="Ex : Réunion pédagogique..."
+                required
+            ><?= htmlspecialchars($motif) ?></textarea>
+
+            <small>
+                Entre 5 et 255 caractères.
+            </small>
+
+        </div>
+
+
+        <!-- Date début -->
+
+        <div class="form-group">
+
+            <label for="date_debut">
+                Date et heure de début
+            </label>
+
+            <input
+                type="datetime-local"
+                id="date_debut"
+                name="date_debut"
+                value="<?= htmlspecialchars($dateDebut) ?>"
+                required
+            >
+
+        </div>
+
+
+        <!-- Date fin -->
+
+        <div class="form-group">
+
+            <label for="date_fin">
+                Date et heure de fin
+            </label>
+
+            <input
+                type="datetime-local"
+                id="date_fin"
+                name="date_fin"
+                value="<?= htmlspecialchars($dateFin) ?>"
+                required
+            >
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+                Réserver
+            </button>
+
+            <a
+                href="/reservations"
+                class="btn btn-secondary"
+            >
+                Annuler
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
