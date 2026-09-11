@@ -12,7 +12,7 @@ use App\Repository\SalleRepositoryInterface;
 use App\Service\CreerReservationService;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use App\Service\SalleIndisponibleException;
+use App\Exception\SalleIndisponibleException;
 
 class CreerReservationServiceTest extends TestCase
 {

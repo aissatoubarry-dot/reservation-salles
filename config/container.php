@@ -13,12 +13,19 @@ use App\Service\AnnulerReservationService;
 use App\Service\CreerReservationService;
 use App\Validation\ReservationValidator;
 use App\Validation\SalleValidator;
+use App\Validation\ReservationValidatorInterface;
+use App\Validation\SalleValidatorInterface;
 use Dotenv\Dotenv;
 use FastRoute\Dispatcher;
 use Illuminate\Database\Capsule\Manager;
 use function DI\autowire;
 use function DI\factory;
 use function FastRoute\simpleDispatcher;
+use App\Support\FlashMessage;
+use App\Support\ResponseStrategyInterface;
+use App\Support\HtmlResponseStrategy;
+use App\Support\JsonResponseStrategy;
+use Psr\Container\ContainerInterface;
 
 return [
 
@@ -52,23 +59,44 @@ return [
     }),
 
 
-
     SalleRepositoryInterface::class =>
         autowire(SalleRepository::class),
 
     ReservationRepositoryInterface::class =>
         autowire(ReservationRepository::class),
 
-
-
-    SalleValidator::class =>
+    SalleValidatorInterface::class =>
         autowire(SalleValidator::class),
 
-    ReservationValidator::class =>
+    ReservationValidatorInterface::class =>
         autowire(ReservationValidator::class),
 
-
+    FlashMessage::class =>
+        autowire(FlashMessage::class),    
    
+
+    HtmlResponseStrategy::class =>
+        autowire(),
+
+    JsonResponseStrategy::class =>
+        autowire(),
+
+    ResponseStrategyInterface::class =>
+        factory(function (ContainerInterface $c): ResponseStrategyInterface {
+
+            $format = $_GET['format'] ?? null;
+
+            $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+
+            $veutDuJson = $format === 'json'
+                || str_contains($accept, 'application/json');
+
+            return $veutDuJson
+                ? $c->get(JsonResponseStrategy::class)
+                : $c->get(HtmlResponseStrategy::class);
+        }),
+
+
 
     CreerReservationService::class =>
         autowire(CreerReservationService::class),
@@ -100,7 +128,7 @@ return [
     }),
 
 
-
     Application::class =>
         autowire(Application::class),
+
 ];

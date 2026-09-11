@@ -9,10 +9,11 @@ use App\Repository\ReservationRepositoryInterface;
 use App\Repository\SalleRepositoryInterface;
 use App\Service\CreerReservationService;
 use App\Service\AnnulerReservationService;
-use App\Service\SalleIndisponibleException;
-use App\Service\ReservationIntrouvableException;
+use App\Exception\SalleIndisponibleException;
+use App\Exception\ReservationIntrouvableException;
 use App\Validation\ReservationValidator;
 use DateTimeImmutable;
+use App\Support\ResponseStrategyInterface;
 
 class ReservationController
 {
@@ -21,7 +22,8 @@ class ReservationController
         private SalleRepositoryInterface $salleRepository,
         private CreerReservationService $creerService,
         private AnnulerReservationService $annulerService,
-        private ReservationValidator $validator
+        private ReservationValidator $validator,
+        private ResponseStrategyInterface $response
     ) {
     }
 
@@ -29,14 +31,13 @@ class ReservationController
     {
         $reservations = $this->reservationRepository->lister();
 
-        ob_start();
-
-        require dirname(__DIR__, 2) . '/templates/reservation/index.php';
-
-        $content = ob_get_clean();
-        $title = 'Liste des réservations';
-
-        require dirname(__DIR__, 2) . '/templates/layout/base.php';
+        $this->response->render(
+            'reservation/index',
+            [
+                'title' => 'Liste des réservations',
+                'reservations' => $reservations
+            ]
+        );
     }
 
     public function show(int $id): void
@@ -44,19 +45,18 @@ class ReservationController
         $reservation = $this->reservationRepository->trouver($id);
 
         if ($reservation === null) {
-            http_response_code(404);
-            require dirname(__DIR__, 2) . '/templates/error/404.php';
+
+            $this->response->notFound();
             return;
         }
 
-        ob_start();
-
-        require dirname(__DIR__, 2) . '/templates/reservation/show.php';
-
-        $content = ob_get_clean();
-        $title = 'Détail de la réservation';
-
-        require dirname(__DIR__, 2) . '/templates/layout/base.php';
+        $this->response->render(
+            'reservation/show',
+            [
+                'title' => 'Détail de la réservation',
+                'reservation' => $reservation
+            ]
+        );
     }
 
     public function create(): void
@@ -64,16 +64,17 @@ class ReservationController
         $salles = $this->salleRepository->lister();
         $errors = [];
         $data = [];
-        $action = '/reservations';
 
-        ob_start();
-
-        require dirname(__DIR__, 2) . '/templates/reservation/form.php';
-
-        $content = ob_get_clean();
-        $title = 'Nouvelle réservation';
-
-        require dirname(__DIR__, 2) . '/templates/layout/base.php';
+        $this->response->render(
+            'reservation/form',
+            [
+                'title' => 'Nouvelle réservation',
+                'salles' => $salles,
+                'errors' => $errors,
+                'data' => $data,
+                'action' => '/reservations',
+            ]
+        );
     }
 
     public function store(): void
@@ -105,9 +106,18 @@ class ReservationController
         if (!$result->isValid()) {
             $errors = $result->errors();
             $salles = $this->salleRepository->lister();
-            $action = '/reservations';
 
-            require __DIR__ . '/../../templates/reservation/form.php';
+        $this->response->render(
+            'reservation/form',
+            [
+                'title' => 'Nouvelle réservation',
+                'salles' => $salles,
+                'errors' => $errors,
+                'data' => $data,
+                'action' => '/reservations',
+            ]
+        );
+
             return;
         }
 
@@ -125,27 +135,41 @@ class ReservationController
         } catch (SalleIndisponibleException $e) {
             $errors['salle_id'][] = $e->getMessage();
             $salles = $this->salleRepository->lister();
-            $action = '/reservations';
 
-            require __DIR__ . '/../../templates/reservation/form.php';
+        $this->response->render(
+            'reservation/form',
+            [
+                'title' => 'Nouvelle réservation',
+                'salles' => $salles,
+                'errors' => $errors,
+                'data' => $data,
+                'action' => '/reservations',
+            ]
+        );
+
             return;
         }
 
-        header('Location: /reservations');
-        exit;
+        $this->response->redirect('/reservations');
+
     }
+
+
 
     public function cancel(int $id): void
     {
         try {
             $this->annulerService->execute($id);
+
+            
         } catch (ReservationIntrouvableException $e) {
-            http_response_code(404);
-            require __DIR__ . '/../../templates/error/404.php';
+
+            $this->response->notFound();
             return;
         }
 
-        header('Location: /reservations');
-        exit;
+        $this->response->redirect('/reservations');
+
     }
+    
 }

@@ -255,3 +255,45 @@ Les classes deviennent dépendantes du conteneur et leurs dépendances sont cach
 
 Cela augmente le couplage et rend le code plus difficile à tester et à maintenir.
 
+
+
+## Étape 13 — Finalisation
+
+### Installation
+
+### Prérequis
+
+- Docker
+- Docker Compose
+- Git
+- PHP 8.3
+- Composer
+
+### Lancer le projet
+
+Cloner le projet :
+
+```bash
+git clone https://github.com/aissatoubarry-dot/reservation-salles.git
+cd reservation-salles
+```
+
+Installer les dépendances :
+composer install
+
+Créer le fichier .env :
+cp .env.example .env
+
+Démarrer les conteneurs :
+docker compose up -d --build
+
+Créer les tables :
+docker compose exec php php database/migrate.php
+
+Insérer les données initiales :
+docker compose exec php php database/seed.php
+
+L'application est accessible sur :
+http://localhost:8080
+
+

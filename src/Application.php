@@ -4,12 +4,14 @@ namespace App;
 
 use DI\Container;
 use FastRoute\Dispatcher;
+use App\Support\ResponseStrategyInterface;
 
 class Application
 {
     public function __construct(
         private Dispatcher $dispatcher,
-        private Container $container
+        private Container $container,
+        private ResponseStrategyInterface $response
     ) {
     }
 
@@ -28,14 +30,11 @@ class Application
         switch ($routeInfo[0]) {
 
             case Dispatcher::NOT_FOUND:
-                http_response_code(404);
-                require dirname(__DIR__) . '/templates/error/404.php';
+                $this->response->notFound();
                 break;
 
             case Dispatcher::METHOD_NOT_ALLOWED:
-                http_response_code(405);
-                header('Allow: ' . implode(', ', $routeInfo[1]));
-                require dirname(__DIR__) . '/templates/error/405.php';
+                $this->response->methodNotAllowed($routeInfo[1]);
                 break;
 
             case Dispatcher::FOUND:

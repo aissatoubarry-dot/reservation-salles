@@ -8,6 +8,8 @@ use App\Repository\ReservationRepositoryInterface;
 use App\Repository\SalleRepositoryInterface;
 use DateTimeImmutable;
 use InvalidArgumentException;
+use App\Exception\SalleIndisponibleException;
+
 
 class CreerReservationService
 {

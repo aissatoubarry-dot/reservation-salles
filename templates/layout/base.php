@@ -26,7 +26,24 @@
     </div>
 </header>
 
+<?php
+    $successMessage = $successMessage ?? null;
+    $errorMessage = $errorMessage ?? null;
+?>
+
 <main class="container">
+
+    <?php if ($successMessage !== null): ?>
+        <div class="alert-success">
+            <?= htmlspecialchars($successMessage) ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($errorMessage !== null): ?>
+        <div class="alert-error">
+            <?= htmlspecialchars($errorMessage) ?>
+        </div>
+    <?php endif; ?>
 
     <?= $content ?? '' ?>
 
