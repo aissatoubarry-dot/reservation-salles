@@ -106,11 +106,11 @@ return [
 
 
 
-    SalleController::class =>
-        autowire(SalleController::class),
+    // SalleController::class =>
+    //     autowire(SalleController::class),
 
-    ReservationController::class =>
-        autowire(ReservationController::class),
+    // ReservationController::class =>
+    //     autowire(ReservationController::class),
 
 
 

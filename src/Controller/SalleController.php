@@ -23,15 +23,33 @@ final class SalleController
  
     public function index(): void
     {
-        $salles = $this->salleRepository->lister();
+        $salles = $this->salleRepository->lister(5);
 
-        $this->response->render(
-            'salle/index',
-            [
-                'title' => 'Liste des salles',
-                'salles' => $salles
-            ]
-        );
+        $pagination = [
+            'currentPage' => $salles->currentPage(),
+            'lastPage' => $salles->lastPage(),
+            'previousPageUrl' => $salles->currentPage() > 1
+                ? '/salles?page=' . ($salles->currentPage() - 1)
+                : null,
+            'nextPageUrl' => $salles->currentPage() < $salles->lastPage()
+                ? '/salles?page=' . ($salles->currentPage() + 1)
+                : null,
+            'pages' => [],
+        ];
+
+        for ($page = 1; $page <= $salles->lastPage(); $page++) {
+            $pagination['pages'][] = [
+                'number' => $page,
+                'url' => '/salles?page=' . $page,
+                'current' => $page === $salles->currentPage(),
+            ];
+        }
+
+        $this->response->render('salle/index', [
+            'title' => 'Liste des salles',
+            'salles' => $salles,
+            'pagination' => $pagination,
+        ]);
     }
 
     

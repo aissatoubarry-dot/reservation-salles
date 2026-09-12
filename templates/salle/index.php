@@ -1,4 +1,8 @@
 <?php
+/** @var array $pagination */
+?>
+
+<?php
 
 $title = 'Liste des salles';
 
@@ -108,5 +112,41 @@ $title = 'Liste des salles';
         <?php endforeach; ?>
 
     </div>
+
+    <?php if ($pagination['lastPage'] > 1): ?>
+
+        <div class="pagination">
+
+            <?php if ($pagination['previousPageUrl']): ?>
+                <a href="<?= htmlspecialchars($pagination['previousPageUrl']) ?>">
+                    Précédent
+                </a>
+            <?php endif; ?>
+
+            <?php foreach ($pagination['pages'] as $page): ?>
+
+                <?php if ($page['current']): ?>
+                    <span class="active">
+                        <?= $page['number'] ?>
+                    </span>
+                <?php else: ?>
+                    <a href="<?= htmlspecialchars($page['url']) ?>">
+                        <?= $page['number'] ?>
+                    </a>
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+
+            <?php if ($pagination['nextPageUrl']): ?>
+                <a href="<?= htmlspecialchars($pagination['nextPageUrl']) ?>">
+                    Suivant
+                </a>
+            <?php endif; ?>
+
+        </div>
+
+    <?php endif; ?>      
+
+
 
 <?php endif; ?>

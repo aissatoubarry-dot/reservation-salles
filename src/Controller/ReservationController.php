@@ -11,7 +11,7 @@ use App\Service\CreerReservationService;
 use App\Service\AnnulerReservationService;
 use App\Exception\SalleIndisponibleException;
 use App\Exception\ReservationIntrouvableException;
-use App\Validation\ReservationValidator;
+use App\Validation\ReservationValidatorInterface;
 use DateTimeImmutable;
 use App\Support\ResponseStrategyInterface;
 
@@ -22,7 +22,7 @@ class ReservationController
         private SalleRepositoryInterface $salleRepository,
         private CreerReservationService $creerService,
         private AnnulerReservationService $annulerService,
-        private ReservationValidator $validator,
+        private ReservationValidatorInterface $validator,
         private ResponseStrategyInterface $response
     ) {
     }

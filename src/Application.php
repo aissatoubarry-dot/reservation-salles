@@ -41,7 +41,8 @@ class Application
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
 
-                $controller = $this->container->get($handler[0]);
+                //$controller = $this->container->get($handler[0]);
+                $controller = $this->container->make($handler[0]);
 
                 $controller->{$handler[1]}(...array_values($vars));
                 break;
